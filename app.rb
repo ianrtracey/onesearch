@@ -9,7 +9,7 @@ module OneSearch
 	  end
 
 		get '/hi' do
-			"Hello world"
+			"OneSearch"
 		end
 
 	end
