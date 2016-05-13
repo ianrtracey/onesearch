@@ -3,18 +3,14 @@ ENV['RACK_ENV'] = 'test'
 require '../app.rb'
 require 'test-unit'
 require 'rack/test'
+require '../services/connection'
+require '../services/dropbox'
 
 class TestConnection < Test::Unit::TestCase
 	include Rack::Test::Methods
 
-	def app
-		Sinatra::Application
+	def test_dropbox_connection
+
 	end
 
-	def test_app_available
-		get '/'
-		puts last_response
-		assert last_response.ok?
-		assert_equal "OneSearch", last_response.body
-	end
 end
