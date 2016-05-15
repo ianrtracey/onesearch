@@ -2,7 +2,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'sinatra'
 
-		get "/" do
-			"OneSearch"
-		end
+	get "/" do
+		"OneSearch"
+	end
 

@@ -5,5 +5,8 @@ gem "sinatra"
 gem "dropbox-sdk"
 gem "rack-test"
 gem "test-unit"
+gem "figaro"
+gem "faraday"
+
 
 

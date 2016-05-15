@@ -1,6 +1,6 @@
 module ServiceConfig
 	module Dropbox
-	 	ENDPOINT = "https://api.dropboxapi.com"
+	 	DROPBOX_API = "https://api.dropboxapi.com/"
 		VERSION = "2"
 	end
 end
