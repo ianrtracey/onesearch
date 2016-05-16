@@ -1,0 +1,25 @@
+{
+  "name": "onesearch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianrtracey/onesearch.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ianrtracey/onesearch/issues"
+  },
+  "homepage": "https://github.com/ianrtracey/onesearch#readme",
+  "dependencies": {
+    "react": "^15.0.2"
+  }
+}
