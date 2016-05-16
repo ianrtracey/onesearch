@@ -31,4 +31,17 @@ class Dropbox
 		end
 	end
 
+	def search(query, path="", max_results=100)
+		@connection.post do |req|
+			req.url "#{VERSION}/files/search"
+			req.body = "{
+				\"path\": \"#{path}\",
+				\"query\": \"#{query}\",
+				\"start\":0,
+				\"max_results\":#{max_results},
+				\"mode\":\"filename\"
+			}"
+		end
+	end
+
 end

@@ -7,6 +7,8 @@ gem "rack-test"
 gem "test-unit"
 gem "figaro"
 gem "faraday"
+gem 'google-api-client'
+gem 'certified'
 
 
 
