@@ -43,22 +43,45 @@ var SearchBar = React.createClass({
 		$('.ui.search')
 		  .search({
 		    apiSettings: {
-		      url: '//localhost:4567/search/{query}'
+		      url: '//localhost:4567/search/{query}',
+		      onResponse: function(apiResponse) {
+		      	var response = { 
+		      		results : {} 
+		      	};
+		      	$.each(apiResponse.items, function(index, item) {
+		      		console.log(index);
+		      		var source = "dropbox" || "Unknown",
+		      		max = 25;
+
+		      		if(index >= max) {
+		      			return false;
+		      		}
+
+		      		if (response.results[source] === undefined) {
+		      			response.results[source] = {
+		      				name: "dropbox",
+		      				results: []
+		      			};
+		      		}
+
+		      		response.results[source].results.push({
+		      			title: 'test',
+		      			description: 'test',
+		      			url: 'test'
+		      		});
+		      	});
+		      	return response;
 		    },
 		    type: 'category',
-		    fields: {
-		      results : 'matches',
-		      title   : 'metadata',
-		      url     : 'metadata'
-		    },
 		    minCharacters : 3
+			}
 		  });
 	},
 
 	render: function() {
 		return (
 			 <div className="four wide column" id="test_search">
-				<div className="ui fluid search large ">
+				<div className="ui fluid search category large ">
 				  <div className="ui icon input">
 				    <input className="prompt" type="text" placeholder="search..."></input>
 				    <i className="search icon"></i>

@@ -22,9 +22,11 @@ set :public_folder, 'public'
 	end
 
 	get "/search/:query" do
-		results = JSON.parse(dropbox.search(params[:query]).body)
-		p results
-		return results
+		matches = JSON.parse(dropbox.search(params[:query]).body)['matches']
+		results = matches.map{|x| {:source => ["dropbox", "gdrive", "slack"].sample, 
+								   :name => x['metadata']['name'],
+								   :url => "google.com"}}
+		return JSON.generate({:items => results})
 	end
 
 
