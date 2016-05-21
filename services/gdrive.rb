@@ -33,6 +33,10 @@ class GDrive
 		@service.authorization = authorize
 	end
 
+	def name
+		return NAME
+	end
+
 	def authorize
 	  FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
 
@@ -70,6 +74,14 @@ class GDrive
                                       fields:'nextPageToken, files(id, name)',
                                       page_token: page_token)
 		return response.files
+	end
+
+	def format_results(response)
+		return response.map(&method(:convert_file_obj))
+	end
+
+	def convert_file_obj(obj)
+		return {:title => obj.name, :url => "http://google.com"}
 	end
 
 

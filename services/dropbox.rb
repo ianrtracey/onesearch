@@ -1,14 +1,21 @@
 require_relative 'service_config'
+require_relative '../config/config.rb'
 require 'faraday'
+require 'json'
 
 class Dropbox
 
 	include ServiceConfig::Dropbox
+	include Config::Dropbox
 
 	attr_reader :access_token
 
-	def initialize(access_token)
-		@access_token = access_token
+	def name
+		return NAME
+	end
+
+	def initialize
+		@access_token = DROPBOX_ACCESS_TOKEN
 		@connection = Faraday.new(:url => "#{DROPBOX_API}") do |faraday|
 			faraday.request :url_encoded
 			faraday.response :logger
@@ -42,6 +49,15 @@ class Dropbox
 				\"mode\":\"filename\"
 			}"
 		end
+	end
+
+	def format_results(response)
+		results_hash = JSON.parse(response.body)['matches']
+		return results_hash.map(&method(:convert_file_obj))
+	end
+
+	def convert_file_obj(obj)
+		return {:title => obj['metadata']['name'], :url => "http://google.com"}
 	end
 
 end
