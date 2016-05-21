@@ -13,8 +13,6 @@ class TestService < Test::Unit::TestCase
 		assert_true TestService.included_modules.include?(Service)
 	end
 
-	def test_raising_missingmethod
-		assert_raise Service::MissingMethod, "Dropbox"
-	end
+
 
 end

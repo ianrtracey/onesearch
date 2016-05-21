@@ -10,18 +10,20 @@ module Service
 		end
 	end
 
-	class MissingMethod < ServiceError
+	class MissingMethods < ServiceError
 		def message
 			super + " has missing methods"
 		end
 	end
 
-	def valididate_service(service)
-		methods = [:search, :format_results]
+	def validate_service(service)
+		methods = [:name, :search, :format_results]
 		method_results = methods.map{ |method| service.respond_to? method}
-		if method_results.any? false
-			return false
+		if method_results.all?  # checks if all are true
+			return true
 		end
-		return true 
+		return false
 	end
+	module_function :validate_service
+
 end

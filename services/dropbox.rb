@@ -57,7 +57,7 @@ class Dropbox
 	end
 
 	def convert_file_obj(obj)
-		return {:title => obj['metadata']['name'], :url => "http://google.com"}
+		return {:title => obj['metadata']['name'], :url => "http://dropbox.com"}
 	end
 
 end

@@ -3,14 +3,19 @@ require 'bundler/setup'
 require 'sinatra'
 require 'sinatra/cross_origin'
 require './services/dropbox'
+require './services/gdrive'
+require './aggregator/aggregator'
 require './config/config'
 require 'json'
 
 include Config::Dropbox
-include ServiceConfig::Dropbox
+include ServiceConfig::Dropbox\
+
 gdrive  = GDrive.new
-dropbox = Dropbox.new(DROPBOX_ACCESS_TOKEN)
+dropbox = Dropbox.new
 services = [gdrive, dropbox]
+
+aggregator = Aggregator.new(services)
 
 set :public_folder, 'public'
 
@@ -24,10 +29,7 @@ set :public_folder, 'public'
 	end
 
 	get "/search/:query" do
-		matches = JSON.parse(dropbox.search(params[:query]).body)['matches']
-		results = matches.map{|x| {:source => ["dropbox", "gdrive", "slack"].sample, 
-								   :name => x['metadata']['name'],
-								   :url => "google.com"}}
+		results = aggregator.search(params[:query])
 		return JSON.generate({:items => results})
 	end
 
