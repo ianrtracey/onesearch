@@ -1,7 +1,7 @@
+require 'fileutils'
 require 'google/apis/drive_v3'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
-require 'fileutils'
 require_relative 'service_config'
 require_relative '../config/config'
 
@@ -9,35 +9,37 @@ class GDrive
 
 	include Config::GDrive
 	include ServiceConfig::GDrive
-	SCOPE = Google::Apis::DriveV3::AUTH_DRIVE_METADATA_READONLY
-	
 
-	def initialize
-		# Initialize the API
-		service = Google::Apis::DriveV3::DriveService.new
-		service.client_options.application_name = APPLICATION_NAME
-		service.authorization = authorize
-		# List the 10 most recently modified files.
-		response = service.list_files(page_size: 10,
-		                              fields: 'nextPageToken, files(id, name)')
-		puts 'Files:'
-		puts 'No files found' if response.files.empty?
-		response.files.each do |file|
-		  puts "#{file.name} (#{file.id})"
-		end
+	cert_path = Gem.loaded_specs['google-api-client'].full_gem_path+'/lib/cacerts.pem'
+	ENV['SSL_CERT_FILE'] = cert_path
+
+	OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+	APPLICATION_NAME = 'Drive API Ruby Quickstart'
+	CLIENT_SECRETS_PATH = 'client_secret.json'
+	CREDENTIALS_PATH = File.join(Dir.home, '.credentials',
+	                             "drive-ruby-quickstart.yaml")
+	SCOPE = Google::Apis::DriveV3::AUTH_DRIVE_METADATA_READONLY
+
+##
+# Ensure valid credentials, either by restoring from the saved credentials
+# files or intitiating an OAuth2 authorization. If authorization is required,
+# the user's default browser will be launched to approve the request.
+#
+# @return [Google::Auth::UserRefreshCredentials] OAuth2 credentials
+
+	def initialize 
+		@service = Google::Apis::DriveV3::DriveService.new
+		@service.client_options.application_name = APPLICATION_NAME
+		@service.authorization = authorize
 	end
 
-	# Ensure valid credentials, either by restoring from the saved credentials
-	# files or intitiating an OAuth2 authorization. If authorization is required,
-	# the user's default browser will be launched to approve the request.
-	#
-	# @return [Google::Auth::UserRefreshCredentials] OAuth2 credentials
 	def authorize
 	  FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
 
 	  client_id = Google::Auth::ClientId.from_file(CLIENT_SECRETS_PATH)
 	  token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
-	  authorizer = Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
+	  authorizer = Google::Auth::UserAuthorizer.new(
+	    client_id, SCOPE, token_store)
 	  user_id = 'default'
 	  credentials = authorizer.get_credentials(user_id)
 	  if credentials.nil?
@@ -52,5 +54,23 @@ class GDrive
 	  end
 	  credentials
 	end
+
+	def list_folder(path)
+		response = @service.list_files(page_size: 10,
+                                  fields: 'nextPageToken, files(id, name)')
+		puts 'Files:'
+		puts 'No files found' if response.files.empty?
+		return response.files
+	end
+
+	def search(query)
+		page_token = nil
+		response = @service.list_files(q: "name contains '#{query}'",
+                                      spaces: 'drive',
+                                      fields:'nextPageToken, files(id, name)',
+                                      page_token: page_token)
+		return response.files
+	end
+
 
 end

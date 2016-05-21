@@ -8,7 +8,9 @@ require 'json'
 
 include Config::Dropbox
 include ServiceConfig::Dropbox
+gdrive  = GDrive.new
 dropbox = Dropbox.new(DROPBOX_ACCESS_TOKEN)
+services = [gdrive, dropbox]
 
 set :public_folder, 'public'
 
