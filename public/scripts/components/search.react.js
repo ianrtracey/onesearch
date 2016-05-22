@@ -1,33 +1,9 @@
 var React = require('react');
+var _     = require('underscore');
+var Handlebars = require('handlebars');
 
 
-var content = [
-  { title: 'Andorra' },
-  { title: 'United Arab Emirates' },
-  { title: 'Afghanistan' },
-  { title: 'Antigua' },
-  { title: 'Anguilla' },
-  { title: 'Albania' },
-  { title: 'Armenia' },
-  { title: 'Netherlands Antilles' },
-  { title: 'Angola' },
-  { title: 'Argentina' },
-  { title: 'American Samoa' },
-  { title: 'Austria' },
-  { title: 'Australia' },
-  { title: 'Aruba' },
-  { title: 'Aland Islands' },
-  { title: 'Azerbaijan' },
-  { title: 'Bosnia' },
-  { title: 'Barbados' },
-  { title: 'Bangladesh' },
-  { title: 'Belgium' },
-  { title: 'Burkina Faso' },
-  { title: 'Bulgaria' },
-  { title: 'Bahrain' },
-  { title: 'Burundi' }
-  // etc
-];
+var country_list = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
 
 
 var SearchBar = React.createClass({
@@ -39,51 +15,57 @@ var SearchBar = React.createClass({
 	},
 
 	componentDidMount: function() {
-		console.log('localhost:4567/search/{query}');
-		$('.ui.search')
-		  .search({
-		    apiSettings: {
-		      url: '//localhost:4567/search/{query}',
-		      onResponse: function(apiResponse) {
-		      	var response = { 
-		      		results : {} 
-		      	};
-		      	$.each(apiResponse.items, function(index, item) {
-		      		console.log(index);
-		      		var source = "dropbox" || "Unknown",
-		      		max = 25;
-
-		      		if(index >= max) {
-		      			return false;
-		      		}
-
-		      		if (response.results[source] === undefined) {
-		      			response.results[source] = {
-		      				name: "dropbox",
-		      				results: []
-		      			};
-		      		}
-
-		      		response.results[source].results.push({
-		      			title: 'test',
-		      			description: 'test',
-		      			url: 'test'
-		      		});
-		      	});
-		      	return response;
+		var images = {
+			"Dropbox": "http://www.icreatemagazine.com/wp-content/uploads/2013/12/Dropbox.png",
+			"Google Drive": "http://www.google.com/drive/images/drive/logo-drive.png"
+		}
+		// Instantiate the Bloodhound suggestion engine
+		var movies = new Bloodhound({
+		    datumTokenizer: function (datum) {
+		        return Bloodhound.tokenizers.whitespace(datum.value);
 		    },
-		    type: 'category',
-		    minCharacters : 3
-			}
-		  });
+		    queryTokenizer: Bloodhound.tokenizers.whitespace,
+		    remote: {
+		        url: 'http://localhost:4567/search/%QUERY',
+		        wildcard: '%QUERY',
+		        filter: function (results) {
+		        	console.log(results);
+		        	var list = [];
+		         	_.each(results.items, function (item) {
+		         		var source = item['source'];
+		         		_.each(item.results, function(item_results) {
+							list.push({
+		            			value: item_results['title'],
+		                    	release_date: source,
+		                    	poster_path: images[source]
+		            		});
+		         		});
+		            });
+		           console.log(list);
+		           return list;
+		        }
+		    }
+		});
+
+		// Initialize the Bloodhound suggestion engine
+		movies.initialize();
+		// Instantiate the Typeahead UI
+		$('.typeahead').typeahead(null, {
+		    displayKey: 'value',
+		    source: movies.ttAdapter(),
+		    templates: {
+		        suggestion: Handlebars.compile("<p style='padding:6px'><img width=35 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>"),
+		        footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
+		    }
+		});
 	},
 
 	render: function() {
 		return (
 			 <div className="four wide column" id="test_search">
 				<div className="ui fluid search category large ">
-				  <div className="ui icon input">
-				    <input className="prompt" type="text" placeholder="search..."></input>
+				  <div id="search" className="ui icon input">
+				    <input className="typeahead" type="text" placeholder="search..."></input>
 				    <i className="search icon"></i>
 				  </div>
 				  <div className="results"></div>
