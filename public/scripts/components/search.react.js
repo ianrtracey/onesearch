@@ -50,11 +50,12 @@ var SearchBar = React.createClass({
 		// Initialize the Bloodhound suggestion engine
 		movies.initialize();
 		// Instantiate the Typeahead UI
-		$('.typeahead').typeahead(null, {
+		$('#search-bar').typeahead(null, {
 		    displayKey: 'value',
 		    source: movies.ttAdapter(),
 		    templates: {
-		        suggestion: Handlebars.compile("<p style='padding:6px'><img width=35 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>"),
+		    	
+		        suggestion: Handlebars.compile("<div class='ui clearing segment' style='padding:6px'><div class='ui left floated button'>{{release_date}}</div>{{value}}</div>"),
 		        footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
 		    }
 		});
@@ -62,13 +63,12 @@ var SearchBar = React.createClass({
 
 	render: function() {
 		return (
-			 <div className="four wide column" id="test_search">
-				<div className="ui fluid search category large ">
+			 <div className="twelve wide column" id="test_search">
+				<div className="ui fluid search large">
 				  <div id="search" className="ui icon input">
-				    <input className="typeahead" type="text" placeholder="search..."></input>
+				    <input id="search-bar" className="ui search fluid" type="text" placeholder="search..."></input>
 				    <i className="search icon"></i>
 				  </div>
-				  <div className="results"></div>
 				</div>
 			</div>
 		);

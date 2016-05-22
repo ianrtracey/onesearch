@@ -1,0 +1,14 @@
+New ideas:
+
+1. make docs files and sheet files have different logos
+2. encrypt each instance to avoid data aggregation by host
+3. index sources in db for fast lookups 
+4. document searching and fulltext search
+5. show content type
+6. 
+
+Architecture
+
+1. need to think about user account / company account models
+2. how would encrpytion work per account
+3. how does authentication with all of the integrations work?
