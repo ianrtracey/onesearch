@@ -11,5 +11,9 @@ gem 'google-api-client'
 gem 'certified'
 gem 'sinatra-cross_origin'
 
+gem 'pg'
+gem 'activerecord'
+gem 'sinatra-activerecord'
+gem 'rake'
 
 

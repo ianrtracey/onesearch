@@ -1,3 +1,10 @@
+New Integrations:
+
+1. Slack
+2. Quickbooks
+3. Box
+4. aribtrary file systems?
+
 New ideas:
 
 1. make docs files and sheet files have different logos
@@ -5,9 +12,10 @@ New ideas:
 3. index sources in db for fast lookups 
 4. document searching and fulltext search
 5. show content type
-6. 
+6. look into collecting links
+7. 
 
-Architecture
+Architecture:
 
 1. need to think about user account / company account models
 2. how would encrpytion work per account

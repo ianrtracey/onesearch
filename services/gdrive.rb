@@ -37,6 +37,10 @@ class GDrive
 		return NAME
 	end
 
+	def service
+		return @service
+	end
+
 	def authorize
 	  FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
 

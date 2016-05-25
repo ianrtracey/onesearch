@@ -2,6 +2,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'sinatra'
 require 'sinatra/cross_origin'
+require 'sinatra/activerecord'
 require './services/dropbox'
 require './services/gdrive'
 require './aggregator/aggregator'
@@ -16,6 +17,10 @@ dropbox = Dropbox.new
 services = [gdrive, dropbox]
 
 aggregator = Aggregator.new(services)
+
+
+
+
 
 set :public_folder, 'public'
 
