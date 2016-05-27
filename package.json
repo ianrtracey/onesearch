@@ -54,6 +54,7 @@
     "react-dom": "^15.0.2",
     "react-router": "^2.4.1",
     "reactify": "^1.1.1",
+    "reflux": "^0.4.1",
     "require-dot-file": "^0.4.0",
     "run-sequence": "^1.2.0",
     "semantic-ui": "^2.1.8",
