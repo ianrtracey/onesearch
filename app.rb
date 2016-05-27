@@ -7,16 +7,22 @@ require './services/dropbox'
 require './services/gdrive'
 require './aggregator/aggregator'
 require './config/config'
+require './db/database'
+
+require './models/document'
 require 'json'
 
 include Config::Dropbox
-include ServiceConfig::Dropbox\
+include ServiceConfig::Dropbox
 
 gdrive  = GDrive.new
 dropbox = Dropbox.new
 services = [gdrive, dropbox]
 
 aggregator = Aggregator.new(services)
+Database::DB.connect
+
+
 
 
 
@@ -34,7 +40,8 @@ set :public_folder, 'public'
 	end
 
 	get "/search/:query" do
-		results = aggregator.search(params[:query])
+		docs = Document.where("name like ?", "%#{params[:query]}%")
+		results = docs.map{ |doc| doc.attributes }
 		return JSON.generate({:items => results})
 	end
 

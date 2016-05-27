@@ -10,12 +10,13 @@ class GDrive
 	include Config::GDrive
 	include ServiceConfig::GDrive
 
+	# needs to be reconfigured
 	cert_path = Gem.loaded_specs['google-api-client'].full_gem_path+'/lib/cacerts.pem'
 	ENV['SSL_CERT_FILE'] = cert_path
 
 	OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 	APPLICATION_NAME = 'Drive API Ruby Quickstart'
-	CLIENT_SECRETS_PATH = 'client_secret.json'
+	CLIENT_SECRETS_PATH = './client_secret.json'
 	CREDENTIALS_PATH = File.join(Dir.home, '.credentials',
 	                             "drive-ruby-quickstart.yaml")
 	SCOPE = Google::Apis::DriveV3::AUTH_DRIVE_METADATA_READONLY

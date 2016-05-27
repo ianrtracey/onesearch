@@ -20,3 +20,8 @@ Architecture:
 1. need to think about user account / company account models
 2. how would encrpytion work per account
 3. how does authentication with all of the integrations work?
+4. Sidekiq or other task runner for background jobs to be handled
+	* indexing changes in a Service
+	* initial setup
+	* email
+5. React router or some routing system

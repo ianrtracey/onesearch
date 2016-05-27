@@ -26,23 +26,18 @@ var SearchBar = React.createClass({
 		    },
 		    queryTokenizer: Bloodhound.tokenizers.whitespace,
 		    remote: {
-		        url: 'http://localhost:4567/search/%QUERY',
+		        url: 'http://localhost:9292/search/%QUERY',
 		        wildcard: '%QUERY',
 		        filter: function (results) {
 		        	console.log(results);
-		        	var list = [];
-		         	_.each(results.items, function (item) {
-		         		var source = item['source'];
-		         		_.each(item.results, function(item_results) {
-							list.push({
-		            			value: item_results['title'],
-		                    	release_date: source,
-		                    	poster_path: images[source]
+
+		         	return _.map(results.items, function (item) {
+		         				return {
+		            				name: item['name'],
+		                    		icon: item['icon'],
+		                    		url:  item['url']
+		                    	}
 		            		});
-		         		});
-		            });
-		           console.log(list);
-		           return list;
 		        }
 		    }
 		});
@@ -55,18 +50,21 @@ var SearchBar = React.createClass({
 		    source: movies.ttAdapter(),
 		    templates: {
 		    	
-		        suggestion: Handlebars.compile("<div class='ui clearing segment' style='padding:6px'><div class='ui left floated button'>{{release_date}}</div>{{value}}</div>"),
+		        suggestion: Handlebars.compile("<div style='width: 500px' class='ui attached compact raised segment' style='padding:1px'><img class='ui avatar image' src={{icon}}><span><a href='{{url}}'>{{name}}</a></span></div>"),
 		        footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
 		    }
 		});
 	},
 
 	render: function() {
+		var searchStyle = {
+			width: '500px'
+		};
 		return (
 			 <div className="twelve wide column" id="test_search">
-				<div className="ui fluid search large">
+				<div className="ui twelve wide search large">
 				  <div id="search" className="ui icon input">
-				    <input id="search-bar" className="ui search fluid" type="text" placeholder="search..."></input>
+				    <input style={searchStyle} id="search-bar" className="ui search fluid" type="text" placeholder="search..."></input>
 				    <i className="search icon"></i>
 				  </div>
 				</div>

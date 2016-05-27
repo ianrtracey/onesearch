@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160525024723) do
+ActiveRecord::Schema.define(version: 20160525084420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,10 +19,14 @@ ActiveRecord::Schema.define(version: 20160525024723) do
   create_table "documents", force: :cascade do |t|
     t.string   "name"
     t.string   "source"
-    t.string   "type"
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "kind"
+    t.string   "url"
+    t.string   "icon"
   end
+
+  add_index "documents", ["name"], name: "index_documents_on_name", using: :btree
 
 end
