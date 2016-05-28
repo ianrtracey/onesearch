@@ -9,6 +9,8 @@ var IndexRoute = require('react-router').IndexRoute;
 var hashHistory = require('react-router').hashHistory;
 
 var Services = require('./components/Services.react.js');
+var api = require('./api/api.js') 
+var req = require('./shared/ajax.js');
 
 
 var App = React.createClass({
@@ -36,7 +38,7 @@ var App = React.createClass({
           </div>
         </div>
      </div>
-				<div className="ui center aligned twelve column grid">
+				<div className="ui center aligned grid container">
 					{this.props.children}	
 				</div>
 			</div>	

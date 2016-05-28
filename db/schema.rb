@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160525084420) do
+ActiveRecord::Schema.define(version: 20160527045208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,8 +25,19 @@ ActiveRecord::Schema.define(version: 20160525084420) do
     t.string   "kind"
     t.string   "url"
     t.string   "icon"
+    t.integer  "service_id"
   end
 
   add_index "documents", ["name"], name: "index_documents_on_name", using: :btree
+
+  create_table "services", force: :cascade do |t|
+    t.string   "name"
+    t.string   "auth"
+    t.string   "description"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
+  end
 
 end

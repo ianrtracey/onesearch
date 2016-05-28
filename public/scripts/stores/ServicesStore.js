@@ -1,31 +1,38 @@
 var Reflux = require ('reflux');
-var api = require('../api/api.js');
 var React = require('react');
+var ServicesAction = require('../actions/ServicesActions');
+var api = require('../api/api');
+
 
 var ServicesStore = Reflux.createStore({
 
 	listenables: [ServicesAction],
 
 	init: function() {
+		this.serviceList = [];
 		this.listenTo(ServicesAction.fetch, this.fetch);
+		console.log("service store init");
+
 	},
 
 	getInitialState: function() {
-		this.list = [];
-		return this.list;
+		this.serviceList = [];
+		return this.serviceList;
 	},
 
 	fetch: function() {
 		var promise = api.getServices();
-		promise.success(function (data) {
-			this.list = data;
-			this.trigger(this.list);
+		promise.success(function (json) {
+			var data = JSON.parse(json);
+			this.serviceList = data['services'];
+			console.log(data);
+			this.trigger(this.serviceList);
 		}.bind(this));
 
 		promise.error(function (err) {
-			console.log('error fetching list');
+			console.error('error fetching list');
 		});
 	}
 });
 
-module.exports = ServicesStores;
+module.exports = ServicesStore;

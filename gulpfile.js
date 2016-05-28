@@ -2,8 +2,9 @@ var gulp = require('gulp');
 var browserify = require('gulp-browserify');
 var concat = require('gulp-concat');
 
+
 gulp.task('browserify', function(){
-	gulp.src('public/scripts/**/*.js')
+	gulp.src('public/scripts/*.js')
 	.pipe(browserify({transform: 'reactify'}))
 	.pipe(concat('main.js'))
 	.pipe(gulp.dest('public/build'));

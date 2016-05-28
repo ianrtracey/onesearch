@@ -5,21 +5,18 @@ require 'sinatra/cross_origin'
 require 'sinatra/activerecord'
 require './services/dropbox'
 require './services/gdrive'
-require './aggregator/aggregator'
 require './config/config'
 require './db/database'
 
 require './models/document'
+require './models/service'
 require 'json'
 
 include Config::Dropbox
 include ServiceConfig::Dropbox
 
-gdrive  = GDrive.new
-dropbox = Dropbox.new
-services = [gdrive, dropbox]
 
-aggregator = Aggregator.new(services)
+
 Database::DB.connect
 
 
@@ -44,6 +41,12 @@ set :public_folder, 'public'
 		results = docs.map{ |doc| doc.attributes }
 		return JSON.generate({:items => results})
 	end
+
+	get '/services' do
+		results = Service.all.map{ |service| service.attributes.merge(:count => service.documents.count) }
+		return JSON.generate({:services => results})
+	end
+
 
 
 

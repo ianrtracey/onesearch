@@ -10,4 +10,8 @@ module ServiceConfig
 		OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 		NAME = "Google Drive"
 	end
+
+	module Slack
+		NAME = "Slack"
+	end
 end
