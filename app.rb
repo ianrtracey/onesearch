@@ -7,12 +7,14 @@ require './services/dropbox'
 require './services/gdrive'
 require './config/config'
 require './db/database'
+require 'httparty'
 
 require './models/document'
 require './models/service'
 require 'json'
 
 include Config::Dropbox
+include Config::Slack
 include ServiceConfig::Dropbox
 
 
@@ -45,6 +47,15 @@ set :public_folder, 'public'
 	get '/services' do
 		results = Service.all.map{ |service| service.attributes.merge(:count => service.documents.count) }
 		return JSON.generate({:services => results})
+	end
+
+	get '/services/:service/auth' do
+		if params[:service] != "slack"
+			halt 500, 'invalid service id'
+		end
+		# assuming for now, that it is slack
+		response = HTTParty.get("https://slack.come/oauth/authorize/?client_id=#{SLACK_CLIENT_ID}&scope=#{SLACK_SCOPE}")
+		return response
 	end
 
 

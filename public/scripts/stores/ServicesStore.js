@@ -32,6 +32,10 @@ var ServicesStore = Reflux.createStore({
 		promise.error(function (err) {
 			console.error('error fetching list');
 		});
+	},
+
+	onSync: function(name) {
+		console.log("sync " + name);
 	}
 });
 

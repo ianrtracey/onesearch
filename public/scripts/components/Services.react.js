@@ -20,7 +20,8 @@ var Services = React.createClass({
 			<h2>Services</h2>
 			<div className="ui three column grid">
 			{this.state.serviceList.map(function(service) {
-				return <ServiceCard name={service.name} status={service.status} photo_path={service.url} />;
+				return <ServiceCard name={service.name} status={service.status}
+				 count={service.count} photo_path={service.url} />;
 			})}
 			</div>
 		</div>
@@ -34,7 +35,7 @@ var ServiceCard = React.createClass({
 	render: function() {
 		return (
 		<div className="column">
-		<div className="ui fluid link card">
+		<div className="ui fluid link card tiny">
 		    <div className="image">
 		      <img src={this.props.photo_path}></img>
 		    </div>
@@ -49,16 +50,22 @@ var ServiceCard = React.createClass({
 		    </div>
 		    <div className="extra content">
 		      <span className="right floated">
-		        Joined in 2013
+		        <button onClick={this.handleSync(this.props.name)} className="ui primary small button">
+		        	Sync
+		        </button>
 		      </span>
 		      <span>
-		        <i className="user icon"></i>
-		        75 Friends
+		        <i className="file icon"></i>
+		        {this.props.count} files
 		      </span>
 		    </div>
 	  	</div>
 	  	</div>
 	  	);
+	},
+
+	handleSync: function(name) {
+		ServiceActions.sync(name);
 	}
 
 });

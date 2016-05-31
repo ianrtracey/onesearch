@@ -16,5 +16,7 @@ gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'rake'
 
+gem 'httparty'
+
 
 
