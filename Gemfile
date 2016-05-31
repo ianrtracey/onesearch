@@ -17,6 +17,7 @@ gem 'sinatra-activerecord'
 gem 'rake'
 
 gem 'httparty'
+gem 'shotgun'
 
 
 

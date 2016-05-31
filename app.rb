@@ -16,6 +16,7 @@ require 'json'
 include Config::Dropbox
 include Config::Slack
 include ServiceConfig::Dropbox
+include ServiceConfig::Slack
 
 
 
@@ -50,12 +51,11 @@ set :public_folder, 'public'
 	end
 
 	get '/services/:service/auth' do
-		if params[:service] != "slack"
-			halt 500, 'invalid service id'
-		end
-		# assuming for now, that it is slack
-		response = HTTParty.get("https://slack.come/oauth/authorize/?client_id=#{SLACK_CLIENT_ID}&scope=#{SLACK_SCOPE}")
-		return response
+		oauth_uri = SLACK_OAUTH_BASE_URI
+		oauth_uri += "?client_id=#{SLACK_CLIENT_ID}"
+		oauth_uri += "?scope=#{SLACK_SCOPE}"
+		puts "redirect: #{oauth_uri}"
+		redirect oauth_uri
 	end
 
 

@@ -50,7 +50,7 @@ var ServiceCard = React.createClass({
 		    </div>
 		    <div className="extra content">
 		      <span className="right floated">
-		        <button onClick={this.handleSync(this.props.name)} className="ui primary small button">
+		        <button onClick={() => this.handleSync(this.props.name)} className="ui primary small button">
 		        	Sync
 		        </button>
 		      </span>

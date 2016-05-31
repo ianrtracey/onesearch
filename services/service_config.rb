@@ -13,5 +13,7 @@ module ServiceConfig
 
 	module Slack
 		NAME = "Slack"
+		SLACK_OAUTH_BASE_URI = "https://slack.com/oauth/authorize"
+		SLACK_SCOPE = "files:read"
 	end
 end

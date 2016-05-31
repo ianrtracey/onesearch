@@ -35,7 +35,16 @@ var ServicesStore = Reflux.createStore({
 	},
 
 	onSync: function(name) {
-		console.log("sync " + name);
+		console.log("syncing... " + name);
+		var promise = api.syncService(name);
+		promise.success(function (json) {
+			var data = JSON.parse(json);
+			console.log(data);
+		});
+
+		promise.error(function (err) {
+			console.error('cannot sync');
+		})
 	}
 });
 
