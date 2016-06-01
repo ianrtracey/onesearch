@@ -5,6 +5,13 @@ New Integrations:
 3. Box
 4. aribtrary file systems?
 
+
+TODOS:
+
+1. define what the v1 beta product looks like
+2. define "nice to haves"
+
+
 New ideas:
 
 1. make docs files and sheet files have different logos
@@ -25,3 +32,12 @@ Architecture:
 	* initial setup
 	* email
 5. React router or some routing system
+
+Indexer:
+	- write it in go for optimum performance
+ 	- able to handle concurrent requests to api resources
+
+Results
+	- need to abstract away each result so that varying resource types
+	displayed independent of other data sources
+	

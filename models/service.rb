@@ -1,6 +1,13 @@
-require 'sinatra/activerecord'
+require 'data_mapper'
 
-class Service < ActiveRecord::Base
-	has_many :documents, dependent: :destroy
-	validates :name, uniqueness: true 
+class Service
+	include DataMapper::Resource
+
+	property :id, 			Serial
+	property :name, 		String
+	property :description,  Text
+	property :logo,   		String
+	property :status,    	String
+	property :created_at, 	DateTime
+	property :last_synced,   DateTime
 end

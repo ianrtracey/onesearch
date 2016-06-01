@@ -1,5 +1,12 @@
-require 'sinatra/activerecord'
+require 'data_mapper'
 
-class Document < ActiveRecord::Base
-	belongs_to :service
+class Document
+	include DataMapper::Resource
+
+	property :id, 				Serial
+	property :name, 			String
+	property :kind,   		String
+	property :icon,   		String
+	property :url,    		String
+	property :created_at, DateTime
 end
