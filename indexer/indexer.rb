@@ -1,7 +1,8 @@
 class Indexer
 
-	def initialize
+	def initialize(services)
 		@config = nil
+		@services = services
 	end
 
 	def index(service)
