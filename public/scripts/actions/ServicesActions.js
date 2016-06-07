@@ -3,7 +3,8 @@
 var Reflux = require('reflux');
 
 var ServicesAction = Reflux.createActions([
-	'fetch'
+	'fetch',
+	'sync'
 ]);
 
 module.exports = ServicesAction;

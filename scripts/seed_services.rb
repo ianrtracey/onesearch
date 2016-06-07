@@ -6,12 +6,15 @@ require './services/constants'
 Database::DB.connect
 include ServiceConstants
 
-names = ServiceConfig.constants.map do |service|
-	eval("ServiceConfig::#{service.to_s}::NAME")
+def get_field(service, field)
+	return eval("ServiceConfig::#{service.to_s}::#{field}")
 end
 
-services = names.map do |name|
-	{:name => name, :description => "api", :status => DISABLED}
+services = ServiceConfig.constants.map do |service|
+
+	{:name => get_field(service, "NAME"), :url => get_field(service, "ICON_URL"),
+	 :description => "api", :status => DISABLED}
+
 end
 
 p services
