@@ -149,7 +149,7 @@ set :public_folder, 'public'
 	end
 
 	get '/services' do
-		results = Service.all.map{ |service| service.attributes.merge(:count => service.documents.count) }
+		results = Service.all.map{ |service| service.attributes.merge(:count => 0) }
 		return JSON.generate({:services => results})
 	end
 
@@ -159,6 +159,10 @@ set :public_folder, 'public'
 		oauth_uri += "?scope=#{SLACK_SCOPE}"
 		puts "redirect: #{oauth_uri}"
 		redirect oauth_uri
+	end
+
+	get '/oauth2/callback' do
+		puts "oauth2  callback"
 	end
 
 end
