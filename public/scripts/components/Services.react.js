@@ -32,7 +32,20 @@ var Services = React.createClass({
 
 var ServiceCard = React.createClass({
 
+
 	render: function() {
+		var actionButton;
+
+	if (this.props.status != "Enabled") {
+		actionButton = <button onClick={() => this.handleSync(this.props.name)} className="ui success small button">
+		        	Connect
+		        </button>;
+	} else {
+		actionButton = <button onClick={() => this.handleSync(this.props.name)} className="ui red small button">
+		        	Disconnect
+		        </button>;
+	}
+
 		return (
 		<div className="column">
 		<div className="ui fluid link card tiny">
@@ -50,9 +63,7 @@ var ServiceCard = React.createClass({
 		    </div>
 		    <div className="extra content">
 		      <span className="right floated">
-		        <button onClick={() => this.handleSync(this.props.name)} className="ui success small button">
-		        	Connect
-		        </button>
+		        {actionButton}
 		      </span>
 		      <span>
 		        <i className="file icon"></i>

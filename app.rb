@@ -36,6 +36,7 @@ class OneSearch < Sinatra::Base
 		enable :cross_origin
 		enable :sessions
 		set :gateway, Gateway.new("./config/oauth_secret.yaml")
+		set :current_user, User.get(1)
 	end
 
 
@@ -60,6 +61,13 @@ class OneSearch < Sinatra::Base
 
 	get '/services' do
 		results = Service.all.map{ |service| service.attributes.merge(:count => 0) }
+		authorized_services = settings.current_user.get_keychain.keys
+		results.each do |res|
+			puts res['name']
+			if authorized_services.include? res[:name]
+				res[:status] = "Enabled"
+			end
+		end
 		return JSON.generate({:services => results})
 	end
 

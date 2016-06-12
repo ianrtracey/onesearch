@@ -6,34 +6,104 @@ import (
 	"io/ioutil"
 	"os"
 	"encoding/json"
+	"sync"
+	"time"
 )
 
 
 type File struct {
-	name string
-	title string
-	filetype string
-	url_private_download string
+	Name string `json:"name"`
+	Title string `json:"title"`
+	Filetype string `json:"filetype"`
+	Url_private_download string `json:"url_private_download"`
 }
 
-type FileListAPIResponse struct {
-	FileList []File `json:"files"`
+type SlackToken struct {
+	Token string `json:"slack"`
 }
 
-func getFiles(body []byte) (*FileListResponse, error) {
-	var fileList = new(FileListAPIResponse)
-	err := json.
+type SlackAPIResponse struct {
+	Files []File `json:"files"`
+	Paging Page `json:"paging"`
+	Warning string `json:"warning"`
+	Ok bool `json:"ok"`
 }
+
+type Page struct {
+	Count int `json:"count"`
+	Total int `json:"total"`
+	Page int `json:"page"`
+	Pages int `json:"pages"`
+}
+
+func GetSlackToken() SlackToken {
+	raw, err := ioutil.ReadFile("./test_tokens.json")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	var token SlackToken
+	json.Unmarshal(raw, &token)
+	return token
+}
+
+func getFiles(body []byte) (*SlackAPIResponse, error) {
+	var slackApiResp = new(SlackAPIResponse)
+	err := json.Unmarshal(body, &slackApiResp)
+	if (err != nil) {
+		fmt.Println("Something thing went wrong: %s", err)
+	}
+	return slackApiResp, err
+}
+
+
+
+
 
 func main() {
-	token := // moved to external file
+	token := GetSlackToken()
+	fmt.Println(token.Token)
 	page_num := 1
-	uri := fmt.Sprintf("https://slack.com/api/files.list?token=%s&page=%d", token, page_num)
-	resp, err := http.Get(uri)
+	
+	uri := fmt.Sprintf("https://slack.com/api/files.list?token=%s&page=%d", token.Token, page_num)
+	fmt.Println(uri)
+	res, err := http.Get(uri)
 	if err != nil {
 		fmt.Println("Error!")
 		panic(err.Error())
 	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	slackResp, err := getFiles([]byte(body))
+	fmt.Println(slackResp.Paging.Pages)
+
+	var wg sync.WaitGroup
+	wg.Add(slackResp.Paging.Pages) // number of worker to add? (not sure)
+	start := time.Now()
+	for page := 1; page <= slackResp.Paging.Pages; page++ {
+		fmt.Println("Checking: Page #%s", page)
+		uri := fmt.Sprintf("https://slack.com/api/files.list?token=%s&page=%d", token.Token, page)
+		go func(uri string) {
+			defer wg.Done()
+			res, err := http.Get(uri)
+			if err != nil {
+				fmt.Println("Error!")
+				panic(err.Error())
+			}
+			body, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				panic(err.Error())
+			}
+
+			slackResp, err := getFiles([]byte(body))
+			fmt.Println(slackResp.Paging.Count)
+		}(uri)
+	}
+	wg.Wait()
+	fmt.Printf("Time Elapsed: %s", time.Since(start))
 
 
 }

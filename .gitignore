@@ -9,3 +9,5 @@ src/
 scripts/slack_oauth.rb
 indexer/bin
 indexer/client_secret.json
+indexer/db_creds.json
+indexer/test_tokens.json
