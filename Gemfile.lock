@@ -6,6 +6,7 @@ GEM
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     certified (1.0.0)
+    crypt (2.2.1)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
       dm-constraints (~> 1.2.0)
@@ -146,6 +147,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt
   certified
+  crypt
   data_mapper
   dm-postgres-adapter
   dropbox-sdk
