@@ -21,7 +21,7 @@ var Services = React.createClass({
 			<div className="ui three column grid">
 			{this.state.serviceList.map(function(service) {
 				return <ServiceCard name={service.name} status={service.status}
-				 count={service.count} photo_path={service.url} />;
+				 count={service.count} photo_path={service.logo} />;
 			})}
 			</div>
 		</div>
@@ -50,8 +50,8 @@ var ServiceCard = React.createClass({
 		    </div>
 		    <div className="extra content">
 		      <span className="right floated">
-		        <button onClick={() => this.handleSync(this.props.name)} className="ui primary small button">
-		        	Sync
+		        <button onClick={() => this.handleSync(this.props.name)} className="ui success small button">
+		        	Connect
 		        </button>
 		      </span>
 		      <span>

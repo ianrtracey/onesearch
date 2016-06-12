@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-  fmt.Println("Starting indexer...")
+  fmt.Println("Starting indexers...")
 
 
   ctx := context.Background()
@@ -35,7 +35,7 @@ func main() {
     log.Fatalf("Unable to retrieve drive Client %v", err)
   }
 
-  r, err := srv.Files.List().PageSize(10).
+  r, err := srv.Files.List().PageSize(100).
     Fields("nextPageToken, files(id, name)").Do()
   if err != nil {
     log.Fatalf("Unable to retrieve files.", err)
@@ -49,5 +49,6 @@ func main() {
   } else {
     fmt.Print("No files found.")
   }
+  fmt.Printf("%s\n", r.NextPageToken)
 
 }

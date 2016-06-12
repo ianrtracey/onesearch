@@ -24,6 +24,12 @@ New ideas:
 
 Architecture:
 
+* Thinking about using Passport and Node.js for server given its
+request frequency and the ability to store a multitude of authentication
+strategies
+
+* The indexer will be written using Go's concurrency model
+
 1. need to think about user account / company account models
 2. how would encrpytion work per account
 3. how does authentication with all of the integrations work?
@@ -31,7 +37,7 @@ Architecture:
 	* indexing changes in a Service
 	* initial setup
 	* email
-5. React router or some routing system
+5. React router or some routing system (done)
 
 Indexer:
 	- write it in go for optimum performance
