@@ -12,7 +12,6 @@ gem 'google-api-client'
 gem 'certified'
 
 gem 'sinatra-cross_origin'
-gem 'sinatra-authentication'
 
 
 gem 'pg'
@@ -27,7 +26,6 @@ gem 'shotgun'
 gem 'warden'
 
 gem 'oauth2'
-gem 'openssl'
 
 
 

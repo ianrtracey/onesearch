@@ -40,6 +40,7 @@ var ServicesStore = Reflux.createStore({
 		promise.success(function (json) {
 			var data = JSON.parse(json);
 			console.log(data);
+			window.location = data['redirect_url'];
 		});
 
 		promise.error(function (err) {

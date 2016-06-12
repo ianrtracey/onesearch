@@ -3,7 +3,9 @@ Bundler.require
 
 require './services/dropbox'
 require './services/gdrive'
+
 require './config/config'
+
 require './db/database'
 
 require './models/document'
@@ -12,24 +14,28 @@ require './models/user'
 
 require 'data_mapper'
 require 'digest/sha1'
-require 'sinatra-authentication'
+
+require './auth/gateway'
 
 class OneSearch < Sinatra::Base
 
 
 	include Config::Dropbox
 	include Config::Slack
+	include Config::Sessions
 	include ServiceConfig::Dropbox
 	include ServiceConfig::Slack
 	register Sinatra::Flash
 
 	set :public_folder, 'public'
 
-	use Rack::Session::Cookie, :secret => 
+	use Rack::Session::Cookie, :secret => COOKIE_SECRET
+
 
 	configure do
 		enable :cross_origin
 		enable :sessions
+		set :gateway, Gateway.new("./config/oauth_secret.yaml")
 	end
 
 
@@ -58,15 +64,18 @@ class OneSearch < Sinatra::Base
 	end
 
 	get '/services/:service/auth' do
-		oauth_uri = SLACK_OAUTH_BASE_URI
-		oauth_uri += "?client_id=#{SLACK_CLIENT_ID}"
-		oauth_uri += "?scope=#{SLACK_SCOPE}"
-		puts "redirect: #{oauth_uri}"
-		redirect oauth_uri
+		url = settings.gateway.authorize(params[:service], "http://localhost:9292/oauth2/#{params[:service]}/callback")
+		puts url
+		return JSON.generate({:redirect_url => url})
 	end
 
-	get '/oauth2/callback' do
-		puts "oauth2  callback"
+	get '/oauth2/:service/callback' do
+		puts "#{params[:service]}: #{params[:code]}"
+		token = settings.gateway.get_token(params["code"], "http://localhost:9292/oauth2/#{params[:service]}/callback")
+		DataMapper.finalize
+		@user = User.get(1)
+		@user.add_token(params[:service], token)
+		redirect "/services"
 	end
 
 end
