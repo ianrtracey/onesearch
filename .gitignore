@@ -1,2 +1,11 @@
 config/
 public/build/
+node_modules/
+.DS_STORE
+indexer/pkg/
+n/
+pkg/
+src/
+scripts/slack_oauth.rb
+indexer/bin
+indexer/client_secret.json
