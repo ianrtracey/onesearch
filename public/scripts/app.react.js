@@ -9,6 +9,7 @@ var IndexRoute = require('react-router').IndexRoute;
 var hashHistory = require('react-router').hashHistory;
 
 var Services = require('./components/Services.react.js');
+var SearchPage = require('./components/SearchPage.react.js');
 var api = require('./api/api.js') 
 var req = require('./shared/ajax.js');
 
@@ -53,5 +54,6 @@ ReactDOM.render((
     <Route path="/" component={App}>
       <IndexRoute component={SearchBar} />
       <Route path="services" component={Services} />
+      <Route path="search"   component={SearchPage} />
     </Route>
   </Router>), document.getElementById('app'));

@@ -10,5 +10,10 @@ module.exports = {
 	syncService: function(name) {
 		var promise = req.get("/services/"+name+"/auth");
 		return promise;
+	},
+
+	search: function(term) {
+		var promise = req.get("/search/" + term);
+		return promise;
 	}
 };

@@ -20,8 +20,9 @@ New ideas:
 4. document searching and fulltext search
 5. show content type
 6. look into collecting links
-7. 
-
+7. Views (2)
+	* One is the card view which is sorted by overall relevance
+	* The other broken up list view with each resource broken up.
 Architecture:
 
 * Thinking about using Passport and Node.js for server given its

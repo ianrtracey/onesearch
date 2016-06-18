@@ -9,4 +9,6 @@ class Document
 	property :icon,   		String
 	property :url,    		String
 	property :created_at, DateTime
+	property :updated_at, DateTime
+	property :deleted_at, DateTime
 end

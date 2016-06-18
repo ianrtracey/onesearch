@@ -19,7 +19,7 @@ class Slack
 	end
 
 	def list(page=1)
-		resp = HTTParty.get("https://slack.com/api/files.list?token=#{SLACK_TEST_TOKEN}&page=#{page}")
+		resp = HTTParty.get("https://slack.com/api/files.list?token=#{SLACK_TEST_TOKEN}&page=#{page}&count=500")
 		return resp.body
 	end
 

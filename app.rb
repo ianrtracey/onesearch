@@ -54,7 +54,7 @@ class OneSearch < Sinatra::Base
 	end
 
 	get "/search/:query" do
-		docs = Document.where("name like ?", "%#{params[:query]}%")
+		docs = Document.all(:name.like => "%#{params[:query]}%")
 		results = docs.map{ |doc| doc.attributes }
 		return JSON.generate({:items => results})
 	end

@@ -1,14 +1,25 @@
 var React = require('react');
 var _     = require('underscore');
-var Handlebars = require('handlebars');
+var Handlebars = require('handlebars'),
+{ Navigation } = require('react-router');
+
 
 
 var SearchBar = React.createClass({
+
+	mixins: [Navigation],
 
 	getInitialState: function() {
 		return {
 			value: null
 		};
+	},
+
+	getDefaultProps: function() {
+		return {
+			showSuggestions: "true",
+			onChangeCallback: null
+		}
 	},
 
 	componentDidMount: function() {
@@ -39,18 +50,39 @@ var SearchBar = React.createClass({
 		    }
 		});
 
+		console.log('search bar created');
+		console.log('showSugg: ' + this.props.showSuggestions);
+		console.log('onChange: ' + this.props.onChangeCallback);
 		// Initialize the Bloodhound suggestion engine
-		movies.initialize();
+		var templateSettings;
+		if (this.props.showSuggestions == "true") {
+			movies.initialize();
+			templateSettings = {
+		    suggestion: Handlebars.compile("<div style='width: 500px' class='ui attached compact raised segment' style='padding:1px'><img class='ui avatar image' src={{icon}}><span><a href='{{url}}'>{{name}}</a></span></div>"),
+		    footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
+		  }
+		} else {
+			templateSettings = {}
+		}
 		// Instantiate the Typeahead UI
+		var searchBar = this;
 		$('#search-bar').typeahead(null, {
 		    displayKey: 'value',
 		    source: movies.ttAdapter(),
-		    templates: {
-		    	
-		        suggestion: Handlebars.compile("<div style='width: 500px' class='ui attached compact raised segment' style='padding:1px'><img class='ui avatar image' src={{icon}}><span><a href='{{url}}'>{{name}}</a></span></div>"),
-		        footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
-		    }
+		    templates: templateSettings
+		}).on('keyup', searchBar, function (event) {
+			if (event.keyCode == 13) {
+				searchBar.handleEnterKeyPress();
+			}
+			console.log('change');
+			searchBar.props.onChangeCallback(event.target.value);
 		});
+
+	},
+
+	handleEnterKeyPress: function() {
+		window.console.log('this is an event handler!');
+		this.transitionTo('/search');
 	},
 
 	render: function() {
