@@ -9,12 +9,12 @@ var SearchResultsStore = Reflux.createStore({
 	listenables: [SearchResultsActions],
 
 	init: function() {
-		this.results = [];
+		this.results = {};
 		console.log("searchResultsStore init");
 	},
 
 	getInitialState: function() {
-		this.results = [];
+		this.results = {};
 		return this.results;
 	},
 
@@ -22,11 +22,10 @@ var SearchResultsStore = Reflux.createStore({
 		var promise = api.search(term);
 		console.log('searching: ' + term);
 		promise.success(function (json) {
-			var data = JSON.parse(json);
-			this.results = data["items"];
+			this.results  = JSON.parse(json);
 			this.trigger(this.results)
 			console.log('got:');
-			console.log(this.results);
+			console.dir(this.results);
 		}.bind(this));
 
 		promise.error(function (err) {

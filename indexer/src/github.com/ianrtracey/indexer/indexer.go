@@ -35,13 +35,34 @@ func main() {
     log.Fatalf("Unable to retrieve drive Client %v", err)
   }
 
-  r, err := srv.Files.List().PageSize(100).
+  r, err := srv.Files.List().PageSize(1000).
     Fields("nextPageToken, files(id, name)").Do()
   if err != nil {
     log.Fatalf("Unable to retrieve files.", err)
   }
-
+  fmt.Println("PageSize:")
+  fmt.Println(r.NextPageToken)
   fmt.Println("Files:")
+
+pageToken := r.NextPageToken
+
+PageLoop:
+  for {
+    if len(r.NextPageToken) == 0 {
+      break PageLoop
+    }
+    r, err := srv.Files.List().PageSize(1000).
+    Fields("nextPageToken, files(id, name)").PageToken(pageToken).Do()  
+    if err != nil {
+      log.Fatalf("Unable to retrieve files.", err)
+    }
+    fmt.Println(r.Files)
+    pageToken = r.NextPageToken
+  }
+
+
+
+
   if len(r.Files) > 0 {
     for _, i := range r.Files {
       fmt.Printf("%s (%s)\n", i.Name, i.Id)

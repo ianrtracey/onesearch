@@ -50,6 +50,7 @@ type Document struct {
 	gorm.Model
 	Name string 
 	Kind string 
+	Source string
 	Icon string 
 	Url string
 }
@@ -143,6 +144,7 @@ func main() {
 					Kind: element.Filetype,
 					Icon: "foo",
 					Url:  "yO",
+					Source: "Slack",
 				}
 				db.Create(&document)
 			}

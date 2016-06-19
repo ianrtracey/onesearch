@@ -65,7 +65,7 @@ class GDrive
 	end
 
 	def list_folder(path)
-		response = @service.list_files(page_size: 10,
+		response = @service.list_files(page_size: 1000,
                                   fields: 'nextPageToken, files(id, name)')
 		puts 'Files:'
 		puts 'No files found' if response.files.empty?

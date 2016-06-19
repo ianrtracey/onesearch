@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 	"encoding/json"
-	"sync"
-	"time"
+	// "sync"
+	// "time"
 )
 
 
@@ -55,45 +55,56 @@ func getFiles(body []byte) (*DropboxAPIResponse, error) {
 func main() {
 	token := GetToken()
 	fmt.Println(token.Token)
-	page_num := 1
-	
-	uri := fmt.Sprintf("https://slack.com/api/files.list?token=%s&page=%d", token.Token, page_num)
-	fmt.Println(uri)
-	res, err := http.Get(uri)
+	client := &http.Client{}
+	uri := fmt.Sprintf("https://api.dropboxapi.com/2/files/list_folder")
+	req, err := http.NewRequest("GET", uri, nil)
+	auth_header := fmt.Sprintf("Bearer %s", token.Token)
+	req.Header.Add("Authorization", auth_header)
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("path", "/")
+	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Error!")
+		fmt.Println("error")
 		panic(err.Error())
 	}
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		panic(err.Error())
-	}
+	fmt.Println(resp)
 
-	slackResp, err := getFiles([]byte(body))
-	fmt.Println(slackResp.Paging.Pages)
+	// fmt.Println(uri)
+	// res, err := http.Get(uri)
+	// if err != nil {
+	// 	fmt.Println("Error!")
+	// 	panic(err.Error())
+	// }
+	// body, err := ioutil.ReadAll(res.Body)
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
 
-	var wg sync.WaitGroup
-	wg.Add(slackResp.Paging.Pages) // number of worker to add? (not sure)
-	start := time.Now()
-	for page := 1; page <= slackResp.Paging.Pages; page++ {
-		fmt.Println("Checking: Page #%s", page)
-		uri := fmt.Sprintf("https://slack.com/api/files.list?token=%s&page=%d", token.Token, page)
-		go func(uri string) {
-			defer wg.Done()
-			res, err := http.Get(uri)
-			if err != nil {
-				fmt.Println("Error!")
-				panic(err.Error())
-			}
-			body, err := ioutil.ReadAll(res.Body)
-			if err != nil {
-				panic(err.Error())
-			}
+	// slackResp, err := getFiles([]byte(body))
+	// fmt.Println(slackResp.Paging.Pages)
 
-			slackResp, err := getFiles([]byte(body))
-			fmt.Println(slackResp.Paging.Count)
-		}(uri)
-	}
-	wg.Wait()
-	fmt.Printf("Time Elapsed: %s", time.Since(start))
+	// var wg sync.WaitGroup
+	// wg.Add(slackResp.Paging.Pages) // number of worker to add? (not sure)
+	// start := time.Now()
+	// for page := 1; page <= slackResp.Paging.Pages; page++ {
+	// 	fmt.Println("Checking: Page #%s", page)
+	// 	uri := fmt.Sprintf("https://slack.com/api/files.list?token=%s&page=%d", token.Token, page)
+	// 	go func(uri string) {
+	// 		defer wg.Done()
+	// 		res, err := http.Get(uri)
+	// 		if err != nil {
+	// 			fmt.Println("Error!")
+	// 			panic(err.Error())
+	// 		}
+	// 		body, err := ioutil.ReadAll(res.Body)
+	// 		if err != nil {
+	// 			panic(err.Error())
+	// 		}
 
+	// 		slackResp, err := getFiles([]byte(body))
+	// 		fmt.Println(slackResp.Paging.Count)
+	// 	}(uri)
+	// }
+	// wg.Wait()
+	// fmt.Printf("Time Elapsed: %s", time.Since(start))
+}

@@ -23,18 +23,16 @@ if slack_service.nil?
 	exit(1)
 end
 
-
+puts "pages #{pages}"
 
 page = 1
 files_to_be_created = []
 body = slack.list(page) 
 
-p body
 files = JSON.parse(body)["files"]
 files = files.map(&method(:format_file))
 
 
-p files
 puts files.count
 
 files.each do |file|

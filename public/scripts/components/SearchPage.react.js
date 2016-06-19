@@ -4,6 +4,8 @@ var SearchBar = require('./Search.react.js')
 var SearchResultsActions = require('../actions/SearchResultsActions.js');
 var SearchResultsStore = require('../stores/SearchResultsStore.js');
 
+var _ = require('underscore');
+
 var SearchPage = React.createClass({
 
 	mixins: [Reflux.connect(SearchResultsStore, 'results')],
@@ -29,6 +31,7 @@ var SearchPage = React.createClass({
 								);
 	  					})}
   				</div>
+
 */
 	render: function() {
 		return (
@@ -41,43 +44,37 @@ var SearchPage = React.createClass({
 				</div>
 			</div>
 			<div className="row">
-			<div className="column">
-				<div className="ui segment fluid">
-					<div className="ui horizontal list">
+			{ _.keys(this.state.results).map(function(service_name) {
+				return (
+					<div className="column">
+
+					<div className="ui segment fluid">
+						<div className="ui horizontal list">
 					  <div className="item">
 					    <div className="content">
-					      <div className="header">Google Drive</div>
-					      {this.state.results.length} Files
+					      <div className="header">{service_name}</div>
+					          {this.state.results[service_name].length} Results
 					    </div>
-					  </div>
-				  </div>
-			</div>
-				<div className="ui selection list">
-				{this.state.results.map(function(result) {
-					return (
-						<div className="item">
+					 	</div>
+				 		</div>
+					</div>
+					<div className="ui selection list">
+						{this.state.results[service_name].map(function(result) {
+								return (
+							<div className="item">
 					    <div className="content">
 					      <a className="header">{result.name}</a>
 					    </div>
-				  	</div>
-						);
-				})}
-				  
-				  
-				</div>
-			</div>
-			<div className="column">
-				<div className="ui segment">
-					<p>Slack</p>
-				</div>
-			</div>
-			<div className="column">
-				<div className="ui segment">
-					<p>Dropbox</p>
-				</div>
-			</div>
+				  		</div>
+								);
+						})}
+					</div>
+					</div>
+				);
+			}.bind(this))}				  
 		</div>
 		</div>
+
 
 		);
 	}

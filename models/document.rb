@@ -11,4 +11,5 @@ class Document
 	property :created_at, DateTime
 	property :updated_at, DateTime
 	property :deleted_at, DateTime
+	property :source, String
 end
