@@ -17,6 +17,8 @@ require 'digest/sha1'
 
 require './auth/gateway'
 
+require './api/api_response.rb'
+
 class OneSearch < Sinatra::Base
 
 
@@ -25,6 +27,8 @@ class OneSearch < Sinatra::Base
 	include Config::Sessions
 	include ServiceConfig::Dropbox
 	include ServiceConfig::Slack
+
+
 	register Sinatra::Flash
 
 	set :public_folder, 'public'
@@ -53,11 +57,14 @@ class OneSearch < Sinatra::Base
 		File.read(File.join('public', 'index.html'))
 	end
 
-	get "/search/:query" do
-		docs = Document.all(:name.like => "%#{params[:query]}%")
-		docs = docs.map{ |doc| doc.attributes }
-		results = docs.group_by { |doc| doc[:source] } 
-		return JSON.generate(results)
+	get "/search" do
+		query = params[:q]
+		view = !params[:view].nil? ? params[:view] : "split"
+		puts "q: #{params[:q]}, view: #{params[:view]}"
+		docs = Document.all(:name.like => "%#{query}%")
+		api_response = ApiResponse.new(docs, view)
+		p response
+		return JSON.generate(api_response.response)
 	end
 
 	get '/services' do

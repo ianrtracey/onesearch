@@ -12,8 +12,8 @@ module.exports = {
 		return promise;
 	},
 
-	search: function(term) {
-		var promise = req.get("/search/" + term);
+	search: function(term, view_type) {
+		var promise = req.get("/search?q=" + term +"&view=" + view_type);
 		return promise;
 	}
 };
