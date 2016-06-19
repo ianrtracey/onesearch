@@ -17,7 +17,8 @@ type File struct {
 	Name string `json:"name"`
 	Title string `json:"title"`
 	Filetype string `json:"filetype"`
-	Url_private_download string `json:"url_private_download"`
+	Url string `json:"url_private_download"`
+	Icon string `json:"thumb_64"`
 }
 
 type DBConfig struct {
@@ -142,8 +143,8 @@ func main() {
 				document := Document{
 					Name: element.Name,
 					Kind: element.Filetype,
-					Icon: "foo",
-					Url:  "yO",
+					Icon: element.Icon,
+					Url:  element.Url,
 					Source: "Slack",
 				}
 				db.Create(&document)

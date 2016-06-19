@@ -11,7 +11,7 @@ DataMapper.finalize
 
 def get_doc(file)
 	{:name => file.name, :kind => file.kind, :source => "Google Drive",
-	:icon => "foo", :url => "foo"}
+	:icon => file.icon_link, :url => file.web_view_link}
 end
 
 

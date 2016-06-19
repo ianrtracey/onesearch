@@ -35,14 +35,16 @@ var SearchPage = React.createClass({
 */
 	render: function() {
 		return (
-
-		<div className="ui grid container stackable three column">
+		<div>
+		<div className="ui one column centered grid">
 			<div className="row">
-				<div classNameName="ui three wide column">
-					<h2>Search Beta</h2>
+				<div classNameName="column">
+					<h2>Search Beta2</h2>
 					<SearchBar showSuggestions="false" onChangeCallback={this.handleOnChange} />
 				</div>
 			</div>
+		</div>
+		<div className="ui grid container stackable three column">
 			<div className="row">
 			{ _.keys(this.state.results).map(function(service_name) {
 				return (
@@ -63,7 +65,7 @@ var SearchPage = React.createClass({
 								return (
 							<div className="item">
 					    <div className="content">
-					      <a className="header">{result.name}</a>
+					      <a className="header" href={result.url}>{result.name}</a>
 					    </div>
 				  		</div>
 								);
@@ -74,7 +76,7 @@ var SearchPage = React.createClass({
 			}.bind(this))}				  
 		</div>
 		</div>
-
+		</div>
 
 		);
 	}
